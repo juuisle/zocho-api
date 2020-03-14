@@ -9,11 +9,9 @@
 
 from flask import Response
 from flask_restful import Resource
-from database.models import CollectModel
+from database.models import CollectModel, PaymentModel
 from libs.strings import gettext
 
-
-MESSAGE_NOT_FOUND = 'Collect not found, please contact administrators'
 
 class Collect(Resource):
   """ All API logics of '/collect' endpoint."""
@@ -23,36 +21,38 @@ class Collect(Resource):
 
     collect = CollectModel.find_by_name(name)
     if collect: 
-      return Response(collect, mimetype="application/json", status=200)
+      return Response(collect.to_json(), mimetype="application/json", status=200)
 
     return {'message': gettext("collect_not_found")}
 
   def post(self, name):
     """ POST method """
 
-    name = 'Test'
     if CollectModel.find_by_name(name):
       return {'message': "A store with name '{}' already exists.".format(name)}, 400
 
-    collect = CollectModel(name)  
+    payments = [PaymentModel(description='test', amount=40)]
+    collect = CollectModel(name=name, payments=payments)  
     try:
       collect.save()
-    except:
+    except Exception as ex:
+      print(ex)
       return {"message": "An error occurred creating the collect."}, 500
 
-    return collect.to_json(), 201
+    return Response(collect.to_json(), mimetype="application/json", status=201)
 
-    def delete(self, name):
-      """ DELETE method """
+  def delete(self, name):
+    """ DELETE method """
 
-      collect = CollectModel.find_by_name(name)
-      if collect:
-        try:
-          collect.delete()
-        except:
-          return {"message": "An error occurred deleting the collect."}, 500
-        return {'message': gettext("collect_not_found")}
-      return {'message': gettext("collect_not_found")}
+    collect = CollectModel.find_by_name(name)
+    if collect:
+      try:
+        collect.delete()
+      except Exception as ex:
+        print(ex)
+        return {"message": "An error occurred deleting the collect."}, 500
+      return {'message': gettext("collect_deleted")}
+    return {'message': gettext("collect_not_found")}
 
 class CollectList(Resource):
   """ All API logics of '/collect' endpoint."""
@@ -61,5 +61,5 @@ class CollectList(Resource):
     """ GET method """
 
     collect = CollectModel.find_all()
-    return Response(collect, mimetype="application/json", status=200)
+    return Response(collect.to_json(), mimetype="application/json", status=200)
 

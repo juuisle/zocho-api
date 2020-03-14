@@ -8,12 +8,18 @@
 # --------------------------------------------------------------------------
 
 from db import db
+from bson import ObjectId
+from datetime import datetime
 
 class PaymentModel(db.EmbeddedDocument):
   """ Schemas for payments that user create. """
 
-  name = db.StringField(required=True, unique=True)
-  amount = db.IntField()
+  description = db.StringField()
+  amount = db.DecimalField()
+  currency = db.StringField(default='EUR')
+  last_changed = db.DateTimeField(default=datetime.utcnow())
+  time_created = db.DateTimeField(default=datetime.utcnow())
+
 
 class CollectModel(db.Document):
   """ Schemas for collect that user create. 
@@ -23,15 +29,18 @@ class CollectModel(db.Document):
   meta = {'collection': 'collect'}
 
   name = db.StringField(required=True, unique=True)
-  payments = db.ListField(db.EmbeddedDocumentField(PaymentModel))
+  active = db.BooleanField(required=True, default=True)
+  last_changed = db.DateTimeField(default=datetime.utcnow())
+  time_created = db.DateTimeField(default=datetime.utcnow())
+  payments = db.EmbeddedDocumentListField(PaymentModel)
 
   @classmethod
   def find_all(cls): 
-    return cls.objects().to_json()
+    return cls.objects()
 
   @classmethod
   def find_by_name(cls, name):
-    collect = cls.objects(name=name).to_json()
+    collect = cls.objects(name=name)
     if collect != '[]':
       return collect
     return False
