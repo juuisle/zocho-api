@@ -28,7 +28,7 @@ api = Api(app)
 
 api.add_resource(Collect, '/collect/<string:name>')
 api.add_resource(CollectList, '/collects')
-api.add_resource(Payment, '/payment/<string:id>')
+api.add_resource(Payment, '/payment/<string:query>')
 api.add_resource(PaymentList, '/payments')
 
 

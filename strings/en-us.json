@@ -1,7 +1,17 @@
 {
-  "error_occured": "An error occured",
+  "error_occured": "An error occured. Please contact development team",
+  "error_collect_duplicated_name": "A collect with name '{}' already exists.",
+  "error_collect_creating": "An error occurred when creating the collect.",
+  "error_collect_updating": "An error occurred when updating the collect.",
+  "error_collect_deleting": "An error occurred when deleting the collect.",
+  "error_collect_not_found": "Collect not found.",
 
-  "collect_not_found": "Collect not found.",
+  "error_payment_duplicated_name": "A payment with name '{}' already exists.",
+  "error_payment_creating": "An error occurred when creating the payment.",
+  "error_payment_updating": "An error occurred when updating the payment.",
+  "error_payment_deleting": "An error occurred when deleting the payment.",
+  "error_payment_not_found": "Payment not found.",
+
   "collect_deleted": "Collect deleted.",
   "collect_updated": "Collect updated",
   

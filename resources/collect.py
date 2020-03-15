@@ -14,73 +14,78 @@ from libs.strings import gettext
 
 
 class Collect(Resource):
-  """ All API logics of '/collect' endpoint."""
+  """ '/collect' endpoint.
+  The name of the function is the HTTP methods. 
+  """
 
   def get(self, name):
-    """ GET method
-    Return: collection of payments
-    """
+    """ Return collection of payments """
 
-    collect = PaymentModel.find_by_collect_name(name)
-    if collect: 
-      return Response(collect.to_json(), mimetype="application/json", status=200)
+    payments = PaymentModel.find_by_collect_name(name)
+    if payments is None: 
+      return {'message': gettext("error_collect_not_found")}, 404
 
-    return {'message': gettext("collect_not_found")}
+    return Response(payments.to_json(), mimetype="application/json", status=200)
 
   def post(self, name):
-    """ POST method """
+    """ Create new Collect and save to MongoDB """
 
     if CollectModel.find_by_name(name):
-      return {'message': "A store with name '{}' already exists.".format(name)}, 400
+      return {'message': gettext("error_collect_duplicated_name").format(name)}, 400
 
-    #payments = [PaymentModel(description='test', amount=40)]
     collect = CollectModel(name=name)  
     try:
       collect.save()
-    except Exception as ex:
-      print(ex)
-      return {"message": "An error occurred creating the collect."}, 500
+    except:
+      return {"message": gettext("error_collect_creating")}, 500
 
     return Response(collect.to_json(), mimetype="application/json", status=201)
   
 
   def put(self, name):
-    """ PUT method """
+    """ Update Collect's name """
 
-    req = request.get_json()
+    new_name = request.get_json()["new_name"]
+
+    if CollectModel.find_by_name(new_name) == True:
+      return {"message": gettext("error_collect_duplicated_name").format(new_name)}, 400
+
     collect = CollectModel.find_by_name(name)
-    if collect and CollectModel.find_by_name(req["new_name"]) == False:
-      try:
-        collect.update(name=req["new_name"])
-        payments = PaymentModel.find_by_collect_name(name)
+    if collect is None:
+      return {'message': gettext("error_collect_not_found")}, 404
 
-        for payment in payments:
-          payments.update(collect_name=req["new_name"])
+    try:
+      collect.update(name=new_name)
+      PaymentModel.find_by_collect_name(name).update(collect_name=new_name)
+    except:
+      return {"message": gettext("error_collect_updating")}, 500
 
-      except Exception as ex:
-        print(ex)
-        return {"message": "An error occurred updating the collect."}, 500
-      return {'message': gettext("collect_updated")}
-    return {'message': gettext("error_occured")}
+    return {'message': gettext("collect_updated")}, 200
+
 
   def delete(self, name):
-    """ DELETE method """
+    """ Delete the entire Collect """
 
     collect = CollectModel.find_by_name(name)
-    if collect:
-      try:
-        collect.delete()
-      except Exception as ex:
-        print(ex)
-        return {"message": "An error occurred deleting the collect."}, 500
-      return {'message': gettext("collect_deleted")}
-    return {'message': gettext("collect_not_found")}
+    if collect is None:
+      return {'message': gettext("error_collect_not_found")}
+
+    try:
+      collect.delete()
+      PaymentModel.find_by_collect_name(name).delete()
+    except:
+      return {"message": gettext("error_collect_deleting")}, 500
+
+    return {'message': gettext("collect_deleted")}, 200
+
 
 class CollectList(Resource):
-  """ All API logics of '/collect' endpoint."""
+  """ '/collects' endpoint.
+  The name of the function is the HTTP methods. 
+  """
 
   def get(self):
-    """ GET method """
+    """ Return the list of saved collects """
 
     collect = CollectModel.find_all()
     return Response(collect.to_json(), mimetype="application/json", status=200)

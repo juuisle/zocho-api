@@ -33,16 +33,19 @@ class PaymentModel(db.Document):
   @classmethod
   def find_by_collect_name(cls, collect_name):
     payments = cls.objects(collect_name=collect_name)
-    if payments != '[]':
-      return payments
-    return False
+    if not payments:
+      return None
+
+    return payments
   
   @classmethod
   def find_by_id(cls, id):
     payment = cls.objects(id=id)
-    if payment != '[]':
-      return payment
-    return False
+    if not payment:
+      return None
+
+    return payment
+
 
 class CollectModel(db.Document):
   """ Schemas for collect that user create. 
@@ -63,9 +66,10 @@ class CollectModel(db.Document):
   @classmethod
   def find_by_name(cls, name):
     collect = cls.objects(name=name)
-    if collect != '[]':
-      return collect
-    return False
+    if not collect:
+      return None
+
+    return collect
 
 
 

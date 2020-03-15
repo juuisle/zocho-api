@@ -14,60 +14,67 @@ from libs.strings import gettext
 
 
 class Payment(Resource):
-  """ All API logics of '/collect' endpoint."""
+  """ '/payment' endpoint.
+  The name of the function is the HTTP methods. 
+  """
 
-  def get(self, id):
-    """ GET method """
+  def get(self, query):
+    """ Return the requested payment """
+    
+    payment_id = query
+    payment = PaymentModel.find_by_id(payment_id)
+    if payment is None:
+      return {'message': gettext("error_payment_not_found")}, 404
 
-    payment = PaymentModel.find_by_id(id)
-    if payment: 
-      return Response(payment.to_json(), mimetype="application/json", status=200)
+    return Response(payment.to_json(), mimetype="application/json", status=200)
 
-    return {'message': gettext("collect_not_found")}
+  def post(self, query):
+    """ Add payment to collect """
 
-  def post(self, name):
-    """ POST method """
+    collect_name = query
+    payment_data = request.get_json()
+    collect = CollectModel.find_by_name(collect_name)
+    if collect is None:
+      return {'message': gettext("error_collect_not_found")}, 404
 
-    payment_json = request.get_json()
-    collect = CollectModel.find_by_name(name)
-    if collect:
-      try:
-        payment = PaymentModel(
-          collect_name=name,
-          description=payment_json["description"],
-          amount=payment_json["amount"]
-        )
-        payment.save()
-      except Exception as ex:
-        print(ex)
-        return {"message": "An error occurred updating the collect."}, 500
-      return Response(payment.to_json(), mimetype="application/json", status=201)
-    return {'message': gettext("collect_not_found")}
+    try:
+      payment = PaymentModel(
+        collect_name=collect_name,
+        **payment_data
+      )
+      payment.save()
+    except:
+      return {"message": gettext("error_payment_updating")}, 500
+      
+    return Response(payment.to_json(), mimetype="application/json", status=201)
   
 
   def put(self, name):
-    """ PUT method """
-
+    """ Update payment's data """
   pass
 
-  def delete(self, id):
-    """ DELETE method """
+  def delete(self, query):
+    """ Delete the entire payment """
 
-    payment = PaymentModel.find_by_id(id)
-    if payment:
-      try:
-        payment.delete()
-      except Exception as ex:
-        print(ex)
-        return {"message": "An error occurred deleting the collect."}, 500
-      return {'message': gettext("collect_deleted")}
-    return {'message': gettext("collect_not_found")}
+    payment_id = query
+    payment = PaymentModel.find_by_id(payment_id)
+    if payment is None:
+      return {'message': gettext("error_payment_not_found")}, 404
+
+    try:
+      payment.delete()
+    except:
+      return {"message": gettext("error_payment_deleting")}, 500
+
+    return {'message': gettext("payment_deleted")}, 200
 
 class PaymentList(Resource):
-  """ All API logics of '/collect' endpoint."""
+  """ '/payments' endpoint.
+  The name of the function is the HTTP methods. 
+  """
 
   def get(self):
-    """ GET method """
+    """ Get all payments that users have """
 
     payment_list = PaymentModel.find_all()
     return Response(payment_list.to_json(), mimetype="application/json", status=200)
