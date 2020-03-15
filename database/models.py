@@ -11,15 +11,39 @@ from db import db
 from bson import ObjectId
 from datetime import datetime
 
-class PaymentModel(db.EmbeddedDocument):
+class PaymentModel(db.Document):
   """ Schemas for payments that user create. """
 
+  meta = {'collection': 'payment'}
+  
   description = db.StringField()
   amount = db.DecimalField()
+  buyer = db.StringField()
+  invoice_url = db.StringField()
+  invoice_code = db.StringField()
+  note = db.StringField()
   currency = db.StringField(default='EUR')
   last_changed = db.DateTimeField(default=datetime.utcnow())
   time_created = db.DateTimeField(default=datetime.utcnow())
+  collect_name = db.StringField(required=True)
 
+  @classmethod
+  def find_all(cls): 
+    return cls.objects()
+  
+  @classmethod
+  def find_by_collect_name(cls, collect_name):
+    payments = cls.objects(collect_name=collect_name)
+    if payments != '[]':
+      return payments
+    return False
+  
+  @classmethod
+  def find_by_id(cls, _id):
+    payment = cls.objects(_id=_id)
+    if payment != '[]':
+      return payment
+    return False
 
 class CollectModel(db.Document):
   """ Schemas for collect that user create. 
@@ -32,7 +56,6 @@ class CollectModel(db.Document):
   active = db.BooleanField(required=True, default=True)
   last_changed = db.DateTimeField(default=datetime.utcnow())
   time_created = db.DateTimeField(default=datetime.utcnow())
-  payments = db.EmbeddedDocumentListField(PaymentModel)
 
   @classmethod
   def find_all(cls): 
