@@ -8,7 +8,6 @@
 # --------------------------------------------------------------------------
 
 from db import db
-from bson import ObjectId
 from datetime import datetime
 
 class PaymentModel(db.Document):
@@ -39,8 +38,8 @@ class PaymentModel(db.Document):
     return False
   
   @classmethod
-  def find_by_id(cls, _id):
-    payment = cls.objects(_id=_id)
+  def find_by_id(cls, id):
+    payment = cls.objects(id=id)
     if payment != '[]':
       return payment
     return False

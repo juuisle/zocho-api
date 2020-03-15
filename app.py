@@ -12,6 +12,8 @@ from flask import Flask, jsonify
 from flask_restful import Api
 from db import db 
 from resources.collect import Collect, CollectList
+from resources.payment import Payment, PaymentList
+
 from dotenv import load_dotenv
 
 
@@ -26,18 +28,10 @@ api = Api(app)
 
 api.add_resource(Collect, '/collect/<string:name>')
 api.add_resource(CollectList, '/collects')
+api.add_resource(Payment, '/payment/<string:id>')
+api.add_resource(PaymentList, '/payments')
 
-# GET - Retrieve the payment collections
-# /v1/collect/<string:name>/payment
-# Return: Detail
-@app.route('/collect/<string:name>/payment', methods=['GET'])
-def get_payment(name):
-  pass
 
-#POST /payment/item data: {} --add new payment
-@app.route('/collect/<string:name>/payment', methods=['POST'])
-def add_payment_to_collect(name):
-  pass
 
 if __name__ == '__main__':
   db.init_app(app)

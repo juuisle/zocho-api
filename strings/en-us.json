@@ -1,4 +1,11 @@
 {
+  "error_occured": "An error occured",
+
   "collect_not_found": "Collect not found.",
-  "collect_deleted": "Collect deleted."
+  "collect_deleted": "Collect deleted.",
+  "collect_updated": "Collect updated",
+  
+  "payment_not_found": "Payment not found",
+  "payment_deleted": "Payment deleted",
+  "payment_updated": "Payment updated"
 }
