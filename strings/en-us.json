@@ -17,6 +17,7 @@
   "error_user_updating": "An error occurred when updating the user.",
   "error_user_deleting": "An error occurred when deleting the user.",
   "error_user_not_found": "User not found.",
+  "error_user_invalid_credentials": "Invalid credentials!",
 
 
   "collect_deleted": "Collect deleted.",
@@ -26,5 +27,7 @@
   "payment_deleted": "Payment deleted.",
   "payment_updated": "Payment updated.",
 
-  "user_deleted": "User deleted."
+  "user_deleted": "User deleted.",
+  "user_logged_out": "User '{}' successfully logged out."
+
 }

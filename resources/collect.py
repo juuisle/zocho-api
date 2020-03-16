@@ -9,6 +9,8 @@
 
 from flask import Response, request
 from flask_restful import Resource
+from flask_jwt_extended import jwt_required, fresh_jwt_required
+
 from database.models import CollectModel, PaymentModel
 from libs.strings import gettext
 
@@ -17,7 +19,8 @@ class Collect(Resource):
   """ '/collect' endpoint.
   The name of the function is the HTTP methods. 
   """
-
+  
+  @fresh_jwt_required
   def get(self, name):
     """ Return collection of payments """
 
@@ -26,7 +29,8 @@ class Collect(Resource):
       return {'message': gettext("error_collect_not_found")}, 404
 
     return Response(payments.to_json(), mimetype="application/json", status=200)
-
+  
+  @fresh_jwt_required
   def post(self, name):
     """ Create new Collect and save to MongoDB """
 
@@ -41,7 +45,7 @@ class Collect(Resource):
 
     return Response(collect.to_json(), mimetype="application/json", status=201)
   
-
+  @fresh_jwt_required
   def put(self, name):
     """ Update Collect's name """
 
@@ -61,8 +65,8 @@ class Collect(Resource):
       return {"message": gettext("error_collect_updating")}, 500
 
     return {'message': gettext("collect_updated")}, 200
-
-
+  
+  @jwt_required
   def delete(self, name):
     """ Delete the entire Collect """
 
@@ -83,7 +87,8 @@ class CollectList(Resource):
   """ '/collects' endpoint.
   The name of the function is the HTTP methods. 
   """
-
+  
+  @fresh_jwt_required
   def get(self):
     """ Return the list of saved collects """
 

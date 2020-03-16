@@ -19,28 +19,30 @@ class UserModel(db.Document):
   user_name = db.StringField(required=True, unique=True)
   password = db.StringField(required=True)
   email = db.StringField(unique=True)
+  roles = db.ListField(db.StringField(default='user'))
 
   name = db.StringField()
   active = db.BooleanField(required=True, default=True)
   time_created = db.DateTimeField(default=datetime.utcnow())
 
-  
   @classmethod
   def find_all(cls): 
     return cls.objects()
 
   @classmethod
   def find_by_username(cls, name):
-    user = cls.objects(user_name=name)
-    if not user:
+    try:
+      user = cls.objects.get(user_name=name)
+    except Exception:
       return None
 
     return user
 
   @classmethod
   def find_by_email(cls, email):
-    user = cls.objects(email=email)
-    if not user:
+    try:
+      user = cls.objects.get(email=email)
+    except Exception:
       return None
 
     return user

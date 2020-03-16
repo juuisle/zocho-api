@@ -10,7 +10,18 @@
 from flask import Response, request
 from flask_restful import Resource
 from database.models import UserModel
+from blacklist import BLACKLIST
 from libs.strings import gettext
+
+from werkzeug.security import safe_str_cmp
+from flask_jwt_extended import (
+    create_access_token,
+    create_refresh_token,
+    jwt_refresh_token_required,
+    get_jwt_identity,
+    jwt_required,
+    get_raw_jwt,
+)
 
 
 class UserManagement(Resource):
@@ -45,11 +56,13 @@ class UserManagement(Resource):
   def delete(self):
     """ Delete user """
     
-    user_name = request.get_json()["user_name"]
+    user_data = request.get_json()
 
-    user = UserModel.find_by_username(user_name)
+    user = UserModel.find_by_username(user_data["user_name"])
     if user is None: 
-      return {"message": gettext("error_user_not_found")}, 404
+      user = UserModel.find_by_email(user_data["email"])
+      if user is None: 
+        return {"message": gettext("error_user_not_found")}, 404
     
     try: 
       user.delete()
@@ -60,20 +73,37 @@ class UserManagement(Resource):
 
 
 class UserLogin(Resource):
-  """ '/userlogin' endpoint.
+  """ '/login' endpoint.
   The name of the function is the HTTP methods. 
   """
 
   def post(self):
-    pass
+    user_data = request.get_json()
+    user = UserModel.find_by_username(user_data["user_name"])
+    
+    if user and safe_str_cmp(user.password, user_data["password"]):
+      access_token = create_access_token(user.user_name, fresh=True)
+      refresh_token = create_refresh_token(user.user_name)
+      return (
+          { "access_token": access_token, 
+            "refresh_token": refresh_token
+          }, 200,
+      )
+    return {"message": gettext("error_user_invalid_credentials")}, 401
+
+
 
 class UserLogout(Resource):
   """ '/userlogin' endpoint.
   The name of the function is the HTTP methods. 
   """
-
+  @jwt_required
   def post(self):
-    pass
+      jti = get_raw_jwt()["jti"]  # jti is "JWT ID", a unique identifier for a JWT.
+      user_name = get_jwt_identity()
+      BLACKLIST.add(jti)
+      return {"message": gettext("user_logged_out").format(user_name)}, 200
+
 
 class TokenRefresh(Resource):
   pass

@@ -10,30 +10,38 @@
 import os
 from flask import Flask, jsonify
 from flask_restful import Api
+from flask_jwt_extended import JWTManager
+
 from db import db 
 from resources.collect import Collect, CollectList
 from resources.payment import Payment, PaymentList
 from resources.user import UserManagement, UserLogin, UserLogout, TokenRefresh
+from blacklist import BLACKLIST
 
 from dotenv import load_dotenv
 
 
 app = Flask(__name__)
 load_dotenv(".env", verbose=True)
-
-app.config['MONGODB_SETTINGS'] = {
-  'host': os.environ.get("DATABASE_URL")
-}
-
+# Load config from setting.py
+app.config.from_object("setting.DevelopmentConfig")  
 api = Api(app)
-# List of API endpoint
+
+# Setup the Flask-JWT-Extended extension
+jwt = JWTManager(app)
+
+# This method will check if a token is blacklisted, and will be called automatically when blacklist is enabled
+@jwt.token_in_blacklist_loader
+def check_if_token_in_blacklist(decrypted_token):
+    return decrypted_token["jti"] in BLACKLIST
+
 api.add_resource(Collect, '/collect/<string:name>')
 api.add_resource(CollectList, '/collects')
 api.add_resource(Payment, '/payment/<string:query>')
 api.add_resource(PaymentList, '/payments')
 api.add_resource(UserManagement, '/user')
-
-
+api.add_resource(UserLogin, '/login')
+api.add_resource(UserLogout, '/logout')
 
 if __name__ == '__main__':
   db.init_app(app)

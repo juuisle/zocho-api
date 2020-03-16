@@ -13,6 +13,7 @@ flask-mongoengine = "*"
 flask-restful = "*"
 dnspython = "*"
 flask-jwt-extended = "*"
+werkzeug = "*"
 
 [requires]
 python_version = "3.7"
