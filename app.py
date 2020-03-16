@@ -13,6 +13,7 @@ from flask_restful import Api
 from db import db 
 from resources.collect import Collect, CollectList
 from resources.payment import Payment, PaymentList
+from resources.user import UserManagement, UserLogin, UserLogout, TokenRefresh
 
 from dotenv import load_dotenv
 
@@ -25,11 +26,12 @@ app.config['MONGODB_SETTINGS'] = {
 }
 
 api = Api(app)
-
+# List of API endpoint
 api.add_resource(Collect, '/collect/<string:name>')
 api.add_resource(CollectList, '/collects')
 api.add_resource(Payment, '/payment/<string:query>')
 api.add_resource(PaymentList, '/payments')
+api.add_resource(UserManagement, '/user')
 
 
 

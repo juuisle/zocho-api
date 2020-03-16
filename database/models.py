@@ -10,6 +10,42 @@
 from db import db
 from datetime import datetime
 
+
+class UserModel(db.Document):
+  """ Schema of Users """
+
+  meta = {'collection': 'user'}
+
+  user_name = db.StringField(required=True, unique=True)
+  password = db.StringField(required=True)
+  email = db.StringField(unique=True)
+
+  name = db.StringField()
+  active = db.BooleanField(required=True, default=True)
+  time_created = db.DateTimeField(default=datetime.utcnow())
+
+  
+  @classmethod
+  def find_all(cls): 
+    return cls.objects()
+
+  @classmethod
+  def find_by_username(cls, name):
+    user = cls.objects(user_name=name)
+    if not user:
+      return None
+
+    return user
+
+  @classmethod
+  def find_by_email(cls, email):
+    user = cls.objects(email=email)
+    if not user:
+      return None
+
+    return user
+
+
 class PaymentModel(db.Document):
   """ Schemas for payments that user create. """
 

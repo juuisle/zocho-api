@@ -31,7 +31,7 @@ class Collect(Resource):
     """ Create new Collect and save to MongoDB """
 
     if CollectModel.find_by_name(name):
-      return {'message': gettext("error_collect_duplicated_name").format(name)}, 400
+      return {'message': gettext("error_collect_exists").format(name)}, 400
 
     collect = CollectModel(name=name)  
     try:
@@ -48,7 +48,7 @@ class Collect(Resource):
     new_name = request.get_json()["new_name"]
 
     if CollectModel.find_by_name(new_name) == True:
-      return {"message": gettext("error_collect_duplicated_name").format(new_name)}, 400
+      return {"message": gettext("error_collect_exists").format(new_name)}, 400
 
     collect = CollectModel.find_by_name(name)
     if collect is None:

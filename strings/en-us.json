@@ -1,21 +1,30 @@
 {
   "error_occured": "An error occured. Please contact development team",
-  "error_collect_duplicated_name": "A collect with name '{}' already exists.",
+  "error_collect_exists": "A collect with name '{}' already exists.",
   "error_collect_creating": "An error occurred when creating the collect.",
   "error_collect_updating": "An error occurred when updating the collect.",
   "error_collect_deleting": "An error occurred when deleting the collect.",
   "error_collect_not_found": "Collect not found.",
 
-  "error_payment_duplicated_name": "A payment with name '{}' already exists.",
+  "error_payment_exists": "A payment with name '{}' already exists.",
   "error_payment_creating": "An error occurred when creating the payment.",
   "error_payment_updating": "An error occurred when updating the payment.",
   "error_payment_deleting": "An error occurred when deleting the payment.",
   "error_payment_not_found": "Payment not found.",
 
+  "error_user_exists": "User exists, please use different username.",
+  "error_user_creating": "An error occurred when creating the user.",
+  "error_user_updating": "An error occurred when updating the user.",
+  "error_user_deleting": "An error occurred when deleting the user.",
+  "error_user_not_found": "User not found.",
+
+
   "collect_deleted": "Collect deleted.",
-  "collect_updated": "Collect updated",
+  "collect_updated": "Collect updated.",
   
-  "payment_not_found": "Payment not found",
-  "payment_deleted": "Payment deleted",
-  "payment_updated": "Payment updated"
+  "payment_not_found": "Payment not found.",
+  "payment_deleted": "Payment deleted.",
+  "payment_updated": "Payment updated.",
+
+  "user_deleted": "User deleted."
 }
