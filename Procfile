@@ -1,1 +1,1 @@
-web: uwsgi uwsgi.ini --lazy-apps
+web: uwsgi uwsgi.ini
