@@ -43,6 +43,10 @@ api.add_resource(UserManagement, '/user')
 api.add_resource(UserLogin, '/login')
 api.add_resource(UserLogout, '/logout')
 
+@app.route('/')
+def home():
+  return os.environ.get("TEST")
+
 if __name__ == '__main__':
   db.init_app(app)
   app.run(port=5000, debug=True)
