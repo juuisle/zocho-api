@@ -1,6 +1,0 @@
-Flask
-Flask-JWT-Extended
-flask-mongoengine
-Flask-RESTful
-Werkzeug
-uwsgi
