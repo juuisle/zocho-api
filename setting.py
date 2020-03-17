@@ -23,6 +23,8 @@ class DevelopmentConfig(Config):
   MONGODB_SETTINGS = {
     'host': os.environ.get("DATABASE_URL")
   }
+  MONGODB_CONNECT = False
+
 
 
 class TestingConfig(Config):

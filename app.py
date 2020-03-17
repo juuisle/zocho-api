@@ -47,5 +47,6 @@ api.add_resource(UserLogout, '/logout')
 def home():
   return os.environ.get("TEST")
 
-db.init_app(app)
-app.run(port=5000, debug=True)
+if __name__ == '__main__':
+  db.init_app(app)
+  app.run(port=5000, debug=True)
