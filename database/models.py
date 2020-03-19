@@ -14,7 +14,7 @@ from datetime import datetime
 class UserModel(db.Document):
   """ Schema of Users """
 
-  meta = {'collection': 'user'}
+  meta = {'db_alias': 'user-db', 'collection': 'user'}
 
   user_name = db.StringField(required=True, unique=True)
   password = db.StringField(required=True)
@@ -51,7 +51,7 @@ class UserModel(db.Document):
 class PaymentModel(db.Document):
   """ Schemas for payments that user create. """
 
-  meta = {'collection': 'payment'}
+  meta = {'db-alias': 'payment-db', 'collection': 'payment'}
   
   description = db.StringField()
   amount = db.DecimalField()
@@ -90,7 +90,7 @@ class CollectModel(db.Document):
   In this application, 'Collect' mean a set/category of payments. 
   """
 
-  meta = {'collection': 'collect'}
+  meta = {'db-alias': 'collect-db', 'collection': 'collect'}
 
   name = db.StringField(required=True, unique=True)
   active = db.BooleanField(required=True, default=True)
