@@ -21,6 +21,7 @@ class ProductionConfig(Config):
 class DevelopmentConfig(Config):
   DEBUG = True
   MONGODB_SETTINGS = {
+    'db': 'payment-db',
     'host': os.environ.get("DATABASE_URL"),
     'connect': False
   }
