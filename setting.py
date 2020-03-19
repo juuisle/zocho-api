@@ -21,9 +21,10 @@ class ProductionConfig(Config):
 class DevelopmentConfig(Config):
   DEBUG = True
   MONGODB_SETTINGS = {
-    'host': os.environ.get("DATABASE_URL")
+    'host': os.environ.get("DATABASE_URL"),
+    'connect': False
   }
-  MONGODB_CONNECT = False
+
 
 
 
