@@ -13,6 +13,7 @@ flask-mongoengine = "*"
 flask-restful = "*"
 flask-jwt-extended = "*"
 uwsgi="*"
+gunicorn = "*"
 
 [requires]
 python_version = "3.7"
