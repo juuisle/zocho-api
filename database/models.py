@@ -7,23 +7,24 @@
 # Supervisor: Sami Sainio
 # --------------------------------------------------------------------------
 
-from db import db
+from mongoengine import *
 from datetime import datetime
 
 
-class UserModel(db.Document):
+class UserModel(Document):
   """ Schema of Users """
 
-  meta = {'db_alias': 'user-db', 'collection': 'user'}
+  objects = QuerySetManager()
+  meta = {'collection': 'user'}
 
-  user_name = db.StringField(required=True, unique=True)
-  password = db.StringField(required=True)
-  email = db.StringField(unique=True)
-  roles = db.ListField(db.StringField(default='user'))
+  user_name = StringField(required=True, unique=True)
+  password = StringField(required=True)
+  email = StringField(unique=True)
+  roles = ListField(StringField(default='user'))
 
-  name = db.StringField()
-  active = db.BooleanField(required=True, default=True)
-  time_created = db.DateTimeField(default=datetime.utcnow())
+  #name = db.StringField()
+  active = BooleanField(required=True, default=True)
+  time_created = DateTimeField(default=datetime.utcnow())
 
   @classmethod
   def find_all(cls): 
@@ -48,21 +49,23 @@ class UserModel(db.Document):
     return user
 
 
-class PaymentModel(db.Document):
+class PaymentModel(Document):
   """ Schemas for payments that user create. """
-
-  meta = {'db-alias': 'payment-db', 'collection': 'payment'}
   
-  description = db.StringField()
-  amount = db.DecimalField()
-  buyer = db.StringField()
-  invoice_url = db.StringField()
-  invoice_code = db.StringField()
-  note = db.StringField()
-  currency = db.StringField(default='EUR')
-  last_changed = db.DateTimeField(default=datetime.utcnow())
-  time_created = db.DateTimeField(default=datetime.utcnow())
-  collect_name = db.StringField(required=True)
+  objects = QuerySetManager()
+
+  meta = {'collection': 'payment'}
+  
+  description = StringField()
+  amount = DecimalField()
+  buyer = StringField()
+  invoice_url = StringField()
+  invoice_code = StringField()
+  note = StringField()
+  currency = StringField(default='EUR')
+  last_changed = DateTimeField(default=datetime.utcnow())
+  time_created = DateTimeField(default=datetime.utcnow())
+  collect_name = StringField(required=True)
 
   @classmethod
   def find_all(cls): 
@@ -85,17 +88,20 @@ class PaymentModel(db.Document):
     return payment
 
 
-class CollectModel(db.Document):
+class CollectModel(Document):
   """ Schemas for collect that user create. 
   In this application, 'Collect' mean a set/category of payments. 
   """
+  
+  objects = QuerySetManager()
 
-  meta = {'db-alias': 'collect-db', 'collection': 'collect'}
 
-  name = db.StringField(required=True, unique=True)
-  active = db.BooleanField(required=True, default=True)
-  last_changed = db.DateTimeField(default=datetime.utcnow())
-  time_created = db.DateTimeField(default=datetime.utcnow())
+  meta = {'collection': 'collect'}
+
+  name = StringField(required=True, unique=True)
+  active = BooleanField(required=True, default=True)
+  last_changed = DateTimeField(default=datetime.utcnow())
+  time_created = DateTimeField(default=datetime.utcnow())
 
   @classmethod
   def find_all(cls): 

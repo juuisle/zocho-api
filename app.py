@@ -12,7 +12,7 @@ from flask import Flask, jsonify
 from flask_restful import Api
 from flask_jwt_extended import JWTManager
 
-from db import db 
+from flask_mongoengine import MongoEngine
 from resources.collect import Collect, CollectList
 from resources.payment import Payment, PaymentList
 from resources.user import UserManagement, UserLogin, UserLogout, TokenRefresh
@@ -30,6 +30,7 @@ api = Api(app)
 # Setup the Flask-JWT-Extended extension
 jwt = JWTManager(app)
 
+db = MongoEngine(app)
 # This method will check if a token is blacklisted, and will be called automatically when blacklist is enabled
 @jwt.token_in_blacklist_loader
 def check_if_token_in_blacklist(decrypted_token):
@@ -48,5 +49,5 @@ def home():
   return os.environ.get("TEST")
 
 if __name__ == '__main__':
-  db.init_app(app)
+ # db.init_app(app)
   app.run(port=5000, debug=True)

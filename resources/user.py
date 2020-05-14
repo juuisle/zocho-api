@@ -79,7 +79,13 @@ class UserLogin(Resource):
 
   def post(self):
     user_data = request.get_json()
+    print(user_data["user_name"])
     user = UserModel.find_by_username(user_data["user_name"])
+    
+    #user = UserModel.objects(user_name=user_data["user_name"])
+
+
+    print(user)
     
     if user and safe_str_cmp(user.password, user_data["password"]):
       access_token = create_access_token(user.user_name, fresh=True)
