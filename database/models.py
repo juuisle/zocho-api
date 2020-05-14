@@ -7,13 +7,11 @@
 # Supervisor: Sami Sainio
 # --------------------------------------------------------------------------
 
-from mongoengine import *
+from mongoengine import Document, QuerySetManager, StringField, ListField, BooleanField, DateTimeField, DecimalField
 from datetime import datetime
 
 
 class UserModel(Document):
-  """ Schema of Users """
-
   objects = QuerySetManager()
   meta = {'collection': 'user'}
 
@@ -22,7 +20,7 @@ class UserModel(Document):
   email = StringField(unique=True)
   roles = ListField(StringField(default='user'))
 
-  #name = db.StringField()
+  name = StringField()
   active = BooleanField(required=True, default=True)
   time_created = DateTimeField(default=datetime.utcnow())
 
@@ -50,8 +48,6 @@ class UserModel(Document):
 
 
 class PaymentModel(Document):
-  """ Schemas for payments that user create. """
-  
   objects = QuerySetManager()
 
   meta = {'collection': 'payment'}
@@ -89,12 +85,7 @@ class PaymentModel(Document):
 
 
 class CollectModel(Document):
-  """ Schemas for collect that user create. 
-  In this application, 'Collect' mean a set/category of payments. 
-  """
-  
   objects = QuerySetManager()
-
 
   meta = {'collection': 'collect'}
 
@@ -116,7 +107,59 @@ class CollectModel(Document):
     return collect
 
 
+class PlantModel(Document):
+  objects = QuerySetManager()
 
+  meta = {'collection' : 'plant'}
+
+  name = StringField(required=True, unique=True)
+  last_changed = DateTimeField(default=datetime.utcnow())
+  time_created = DateTimeField(default=datetime.utcnow())
+  description =  StringField()
+  weather = StringField()
+  pic_url = StringField()
+  category = StringField(required=True)
+
+  @classmethod
+  def find_all(cls): 
+    return cls.objects()
+  
+  @classmethod
+  def find_by_plant_category_name(cls, category):
+    plants = cls.objects(category=category)
+    if not plants:
+      return None
+
+    return plants
+  
+  @classmethod
+  def find_by_id(cls, id):
+    plant = cls.objects(id=id)
+    if not plant:
+      return None
+
+    return plant
 
 
   
+class PlantCategoryModel(Document):
+  objects = QuerySetManager()
+
+  meta = {'collection': 'plant_category'}
+
+  name = StringField(required=True, unique=True)
+  active = BooleanField(required=True, default=True)
+  last_changed = DateTimeField(default=datetime.utcnow())
+  time_created = DateTimeField(default=datetime.utcnow())
+
+  @classmethod
+  def find_all(cls): 
+    return cls.objects()
+
+  @classmethod
+  def find_by_name(cls, name):
+    category = cls.objects(name=name)
+    if not category:
+      return None
+
+    return category
