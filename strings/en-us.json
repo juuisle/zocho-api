@@ -19,6 +19,17 @@
   "error_user_not_found": "User not found.",
   "error_user_invalid_credentials": "Invalid credentials!",
 
+  "error_plant_exists": "A plant with name '{}' already exists.",
+  "error_plant_creating": "An error occurred when creating the plant.",
+  "error_plant_updating": "An error occurred when updating the plant.",
+  "error_plant_deleting": "An error occurred when deleting the plant.",
+  "error_plant_not_found": "Plant not found.",
+
+  "error_plant_category_exists": "A plant category_with name '{}' already exists.",
+  "error_plant_ccategory_reating": "An error occurred when creating the plant category.",
+  "error_plant_category_updating": "An error occurred when updating the plant category.",
+  "error_plant_category_deleting": "An error occurred when deleting the plant category.",
+  "error_plant_category_not_found": "Plant category_not found.",
 
   "collect_deleted": "Collect deleted.",
   "collect_updated": "Collect updated.",
@@ -27,7 +38,14 @@
   "payment_deleted": "Payment deleted.",
   "payment_updated": "Payment updated.",
 
+  "plant_not_found": "Plant not found.",
+  "plant_deleted": "Plant deleted.",
+  "plant_updated": "Plant updated.",
+
+  "plant_category_not_found": "Plant category not found.",
+  "plant_category_deleted": "Plant category deleted.",
+  "plant_category_updated": "Plant category updated.",
+
   "user_deleted": "User deleted.",
   "user_logged_out": "User '{}' successfully logged out."
-
 }
