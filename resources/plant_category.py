@@ -28,8 +28,10 @@ from libs.strings import gettext
 
 
 class PlantCategory(Resource):
+  """ '/plantcategory/<string:name>' endpoint.
+  The name of the function is the HTTP methods. 
+  """
 
-  @fresh_jwt_required
   def get(self, name):
     plant = PlantCategoryModel.find_by_name(name)
     if plant is None: 
@@ -65,7 +67,7 @@ class PlantCategory(Resource):
       PlantCategory.update(name=new_name)
       PlantModel.find_by_PlantCategory_name(name).update(PlantCategory_name=new_name)
     except:
-      return {"message": gettext("erro_plant_category_updating")}, 500
+      return {"message": gettext("error_plant_category_updating")}, 500
 
     return {'message': gettext("plant_category_updated")}, 200
   
@@ -86,8 +88,9 @@ class PlantCategory(Resource):
 
 
 class PlantCategoryList(Resource):
-
-  @fresh_jwt_required
+  """ '/plantcategorylist' endpoint.
+  The name of the function is the HTTP methods. 
+  """
   def get(self):
 
     PlantCategory = PlantCategoryModel.find_all()

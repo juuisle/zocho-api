@@ -28,11 +28,17 @@ from libs.strings import gettext
 
 
 class Plant(Resource):
+  """ '/plant/<string:query' endpoint.
+  query: Can be either the plant id or plant category, depends on 
+  the method. 
+  The name of the function is the HTTP methods. 
 
-  @fresh_jwt_required
+  (*Self-note: this way is fast but a litte bit confused, 
+  the api design for this and the database model should be changed)
+  """
+
   def get(self, query):
-    """ Return the requested plant """
-    
+    """ Return the single requested plant """
     plant_id = query
     plant = PlantModel.find_by_id(plant_id)
     if plant is None:
@@ -40,7 +46,7 @@ class Plant(Resource):
 
     return Response(plant.to_json(), mimetype="application/json", status=200)
   
-  @fresh_jwt_required
+  # @fresh_jwt_required
   def post(self, query):
     category_name = query
     plant_data = request.get_json()
@@ -54,12 +60,13 @@ class Plant(Resource):
         **plant_data
       )
       plant.save()
-    except:
+    except Exception as e:
+      print(e)
       return {"message": gettext("error_plant_updating")}, 500
       
     return Response(plant.to_json(), mimetype="application/json", status=201)
 
-  def put(self, name):
+  def put(self, query):
     pass
   
   @jwt_required
@@ -77,8 +84,10 @@ class Plant(Resource):
     return {'message': gettext("plant_deleted")}, 200
 
 class PlantList(Resource):
+  """ '/plants' endpoint.
+  The name of the function is the HTTP methods. 
+  """
   def get(self):
-    """ Get all plants that users have """
-
     plant_list = PlantModel.find_all()
+    print('Here')
     return Response(plant_list.to_json(), mimetype="application/json", status=200)

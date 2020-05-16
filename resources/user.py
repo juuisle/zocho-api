@@ -94,11 +94,6 @@ class UserLogin(Resource):
     print(user_data["user_name"])
     user = UserModel.find_by_username(user_data["user_name"])
     
-    #user = UserModel.objects(user_name=user_data["user_name"])
-
-
-    print(user)
-    
     if user and safe_str_cmp(user.password, user_data["password"]):
       access_token = create_access_token(user.user_name, fresh=True)
       refresh_token = create_refresh_token(user.user_name)
@@ -124,4 +119,9 @@ class UserLogout(Resource):
 
 
 class TokenRefresh(Resource):
-  pass
+  @jwt_refresh_token_required
+  def post(self):
+    user_name = get_jwt_identity()
+    return {
+      'access_token': create_access_token(identity=user_name)
+    }
